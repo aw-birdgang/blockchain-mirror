@@ -50,13 +50,11 @@ contract PaymasterContract {
         }
     }
 
-
     function payForTransaction(UserOperation calldata op, bytes calldata signature) external payable {
         require(IForwarder(forwarder).verify(op, signature), "Verification failed");
         (bool success,) = IForwarder(forwarder).execute(op, signature);
         require(success, "Execution failed");
     }
-
 
     function payForTransaction(UserOperation calldata op) public payable onlyPaymaster {
         require(msg.value >= op.value, "Insufficient value sent");
