@@ -1,0 +1,15 @@
+@startuml
+actor "Transaction Signer" as Transaction_Signer
+entity "Gas Relay" as Gas_Relay
+entity "Trusted Forwarder" as Trusted_Forwarder
+entity "Recipient Contract" as Recipient_Contract
+
+Transaction_Signer -> Gas_Relay : signs & sends request (off-chain)
+Gas_Relay -> Trusted_Forwarder : sendAndVerify(request)
+Trusted_Forwarder -> Trusted_Forwarder : verify signature
+group Scope of this ERC
+    Trusted_Forwarder -> Recipient_Contract : execute (with client-addr appended)
+    Recipient_Contract -> Recipient_Contract : _msgSender()
+    Recipient_Contract -> Recipient_Contract : check msg.sender, extract client addr
+end
+@enduml
