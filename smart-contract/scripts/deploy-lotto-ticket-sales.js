@@ -1,22 +1,20 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-    const LotteryTicket = await hre.ethers.getContractFactory("LotteryTicketContract");
-    const lotteryTicket = await LotteryTicket.deploy();
+    // Deploying the TrustedForwarder
+    const TrustedForwarder = await ethers.getContractFactory("TrustedForwarder");
+    const trustedForwarder = await TrustedForwarder.deploy();
+    await trustedForwarder.deployed();
+    console.log("TrustedForwarder deployed to:", trustedForwarder.address);
 
-    await lotteryTicket.deployed();
-
-    console.log("LotteryTicketContract deployed to:", lotteryTicket.address);
-
-    const Paymaster = await hre.ethers.getContractFactory("PaymasterContract");
-    const paymaster = await Paymaster.deploy(lotteryTicket.address);
-
-    await paymaster.deployed();
-
-    console.log("PaymasterContract deployed to:", paymaster.address);
+    // Deploying the LotteryTicketSales
+    const LotteryTicketSales = await ethers.getContractFactory("LotteryTicketSales");
+    const lotteryTicketSales = await LotteryTicketSales.deploy(trustedForwarder.address);
+    await lotteryTicketSales.deployed();
+    console.log("LotteryTicketSales deployed to:", lotteryTicketSales.address);
 }
 
 main().catch((error) => {
     console.error(error);
-    process.exitCode = 1;
+    process.exit(1);
 });
