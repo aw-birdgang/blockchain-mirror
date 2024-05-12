@@ -1,0 +1,10 @@
+@startuml
+actor User
+entity NestJSBackend
+entity EthereumBlockchain
+
+User -> NestJSBackend : Request to buy ticket (POST /lottery/buy-ticket)
+NestJSBackend -> EthereumBlockchain : Signs and forwards transaction
+EthereumBlockchain -> NestJSBackend : Transaction receipt
+NestJSBackend -> User : Return transaction hash
+@enduml
